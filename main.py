@@ -17,8 +17,13 @@ def reachable(graph, start_node):
     result = set([start_node])
     frontier = set([start_node])
     while len(frontier) != 0:
-        ###TODO
-        pass
+        next_frontier = set()
+        for node in frontier:
+            for neighbor in graph[node]:
+                if neighbor not in result:
+                    result.add(neighbor)
+                    next_frontier.add(neighbor)
+        frontier = next_frontier
     return result
 
 def test_reachable():
@@ -33,8 +38,12 @@ def test_reachable():
 
 
 def connected(graph):
-    ### TODO
-    pass
+    if len(graph) == 0:
+        return True
+
+    start_node = next(iter(graph))
+    reachable_nodes = reachable(graph, start_node)
+    return len(reachable_nodes) == len(graph)
 
 def test_connected():
     graph = make_undirected_graph([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'B')])
@@ -49,8 +58,14 @@ def n_components(graph):
     Returns:
       the number of connected components in an undirected graph
     """
-    ### TODO
-    pass
+    components = []
+    visited = set()
+    for node in graph:
+        if node not in visited:
+            reachable_nodes = reachable(graph, node)
+            components.append(reachable_nodes)
+            visited.update(reachable_nodes)
+    return len(components)
 
 def test_n_components():
     graph = make_undirected_graph([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'B')])
